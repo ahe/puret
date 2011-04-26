@@ -23,20 +23,20 @@ module Puret
         attributes.each do |attribute|
           # attribute setter
           define_method "#{attribute}=" do |value|
-            puret_attributes[I18n.locale][attribute] = value
+            puret_attributes[$puret_locale][attribute] = value
           end
 
           # attribute getter
           define_method attribute do
             # return previously setted attributes if present
-            return puret_attributes[I18n.locale][attribute] if puret_attributes[I18n.locale][attribute]
+            return puret_attributes[$puret_locale][attribute] if puret_attributes[$puret_locale][attribute]
             return if new_record?
 
             # Lookup chain:
             # if translation not present in current locale,
             # use default locale, if present.
             # Otherwise use first translation
-            translation = translations.detect { |t| t.locale.to_sym == I18n.locale && t[attribute] } ||
+            translation = translations.detect { |t| t.locale.to_sym == $puret_locale && t[attribute] } ||
               translations.detect { |t| t.locale.to_sym == puret_default_locale && t[attribute] } ||
               translations.first
 
